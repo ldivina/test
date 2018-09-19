@@ -1,0 +1,23 @@
+Resources:
+  CompanyHTTPSSHsecuritygroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow Access for SSH
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 22
+        ToPort: 22
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
+Outputs:
+  SecurityGroup:
+    Description: This is the security group rules for the company
+    Value: !Ref CompanyHTTPSSHsecuritygroup
+    Export: 
+      Name: SSHHTTPSecurityGroup
+  
+
+

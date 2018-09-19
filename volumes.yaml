@@ -1,0 +1,15 @@
+Resources: 
+  EBSVolume1:
+    Type: AWS::EC2::Volume
+    Properties: 
+      AvailabilityZone: !ImportValue availzone
+      Size: 8
+
+  MountPoint1:
+    Type: AWS::EC2::VolumeAttachment
+    Properties:
+      InstanceId: !ImportValue SingleEC2instance
+      VolumeId: !Ref EBSVolume1
+      Device: /dev/sdb
+
+ 

@@ -1,0 +1,38 @@
+# Forces user to select the keypair to SSH into instance
+Parameters:
+  KeyName:
+    Description: "Please select from the following key pairs"
+    Type: String
+    AllowedValues: 
+      - ubuntu-key
+#Defined mappings for region us-east-1 AMIs
+Mappings: 
+  AWSRegionArch2AMI:
+    us-east-1:
+      HVM64: ami-6869aa05
+      
+Resources:
+# Instance that will select the key name from parameters and find mappings of the AWS region the user is 
+# currently in so they do not have to be defined  
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      KeyName: !Ref KeyName
+      ImageId: !FindInMap [AWSRegionArch2AMI, !Ref 'AWS::Region', HVM64]
+      InstanceType: t2.micro  
+      SecurityGroups: 
+        - !ImportValue SSHHTTPSecurityGroup
+
+# Output values of the AZ and ec2 instance for ebs volume mounts
+Outputs:
+  AZOutput:
+    Description: az the ec2 instance is in
+    Value: !GetAtt MyEC2Instance.AvailabilityZone
+    Export:
+      Name: availzone
+  EC2Instance:
+    Description: the single ec2 instance
+    Value: !Ref MyEC2Instance
+    Export:
+      Name: SingleEC2instance
+  
